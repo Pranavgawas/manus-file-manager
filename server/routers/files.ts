@@ -1,8 +1,8 @@
-import { TRPCError } from "@trpc/server";
+﻿import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createFile, deleteFile, getFileById, getUserFiles } from "../db";
 import { protectedProcedure, router } from "../_core/trpc";
-import { storagePut } from "../storage";
+import { storagePut, storageGetSignedUrl } from "../storage";
 
 /**
  * Determine file type category based on MIME type
@@ -38,7 +38,7 @@ export const filesRouter = router({
 
         // Upload to S3
         const { key, url } = await storagePut(
-          `${ctx.user.id}/files/${Date.now()}-${input.filename}`,
+          \/files/\-\,
           buffer,
           input.mimeType
         );
@@ -91,7 +91,11 @@ export const filesRouter = router({
           search: input.search,
         });
 
-        return files;
+        // Add display URLs to each file
+        return files.map(file => ({
+          ...file,
+          url: /manus-storage/\
+        }));
       } catch (error) {
         console.error("[Files] List failed:", error);
         throw new TRPCError({
@@ -152,13 +156,48 @@ export const filesRouter = router({
           });
         }
 
-        return file;
+        return {
+          ...file,
+          url: /manus-storage/\
+        };
       } catch (error) {
         if (error instanceof TRPCError) throw error;
         console.error("[Files] GetById failed:", error);
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
           message: "Failed to get file",
+        });
+      }
+    }),
+
+  /**
+   * Get a signed URL for downloading a file
+   */
+  getDownloadUrl: protectedProcedure
+    .input(z.object({ fileId: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.user) {
+        throw new TRPCError({ code: "UNAUTHORIZED" });
+      }
+
+      try {
+        const file = await getFileById(input.fileId, ctx.user.id);
+
+        if (!file) {
+          throw new TRPCError({
+            code: "NOT_FOUND",
+            message: "File not found",
+          });
+        }
+
+        const signedUrl = await storageGetSignedUrl(file.storageKey);
+        return { url: signedUrl };
+      } catch (error) {
+        if (error instanceof TRPCError) throw error;
+        console.error("[Files] getDownloadUrl failed:", error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to get download URL",
         });
       }
     }),
