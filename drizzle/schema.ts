@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
+import { bigint, int, mysqlEnum, mysqlTable, text, timestamp, varchar } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -25,4 +25,30 @@ export const users = mysqlTable("users", {
 export type User = typeof users.$inferSelect;
 export type InsertUser = typeof users.$inferInsert;
 
-// TODO: Add your tables here
+/**
+ * Files table for storing user-uploaded file metadata.
+ * File bytes are stored in S3; this table tracks references and metadata.
+ */
+export const files = mysqlTable("files", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().references(() => users.id),
+  /** Original filename as uploaded by user */
+  filename: varchar("filename", { length: 255 }).notNull(),
+  /** Storage key returned by storagePut (reference to S3 object) */
+  storageKey: varchar("storageKey", { length: 512 }).notNull(),
+  /** MIME type of the file (e.g., image/jpeg, video/mp4, text/plain) */
+  mimeType: varchar("mimeType", { length: 128 }).notNull(),
+  /** File size in bytes */
+  size: bigint("size", { mode: "number" }).notNull(),
+  /** File type category for filtering: image, video, text, or other */
+  fileType: mysqlEnum("fileType", ["image", "video", "text", "other"]).notNull(),
+  /** Timestamp when file was uploaded */
+  uploadedAt: timestamp("uploadedAt").defaultNow().notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type File = typeof files.$inferSelect;
+export type InsertFile = typeof files.$inferInsert;
+
+// TODO: Add more tables here as your schema grows.
