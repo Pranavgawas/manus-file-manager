@@ -1,21 +1,12 @@
-﻿import { File as FileType } from "@/types";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Loader2 } from "lucide-react";
+import { File as FileType } from "@/types";
+import { Button } from "@/components/ui/button";
+import { AlertTriangle } from "lucide-react";
 
 interface FileDeleteDialogProps {
   file: FileType;
   onConfirm: () => void;
   onCancel: () => void;
-  isDeleting: boolean;
+  isDeleting?: boolean;
 }
 
 export default function FileDeleteDialog({
@@ -25,35 +16,41 @@ export default function FileDeleteDialog({
   isDeleting,
 }: FileDeleteDialogProps) {
   return (
-    <AlertDialog open={!!file} onOpenChange={(open) => !open && onCancel()}>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This will permanently delete <span className="font-semibold text-foreground">"\"</span> and remove it from our servers. This action cannot be undone.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={(e) => {
-              e.preventDefault();
-              onConfirm();
-            }}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-sm rounded-lg bg-card shadow-xl">
+        <div className="flex items-center gap-3 border-b border-border p-6">
+          <AlertTriangle className="h-6 w-6 text-destructive" />
+          <h2 className="text-lg font-semibold text-foreground">Delete File</h2>
+        </div>
+
+        <div className="p-6">
+          <p className="text-foreground">
+            Are you sure you want to delete <span className="font-semibold">{file.filename}</span>?
+          </p>
+          <p className="mt-2 text-sm text-subtle">
+            This action cannot be undone. The file will be permanently removed.
+          </p>
+        </div>
+
+        <div className="flex gap-3 border-t border-border p-6">
+          <Button
+            variant="outline"
+            onClick={onCancel}
             disabled={isDeleting}
-            className="bg-destructive text-white hover:bg-destructive/90"
+            className="flex-1"
           >
-            {isDeleting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Deleting...
-              </>
-            ) : (
-              "Delete"
-            )}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={onConfirm}
+            disabled={isDeleting}
+            className="flex-1"
+          >
+            {isDeleting ? "Deleting..." : "Delete"}
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
