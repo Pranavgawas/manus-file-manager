@@ -1,4 +1,4 @@
-﻿import { useAuth } from "@/_core/hooks/useAuth";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -86,7 +86,7 @@ export default function DashboardLayout({
     <SidebarProvider
       style={
         {
-          "--sidebar-width": \\px\,
+          "--sidebar-width": `${sidebarWidth}px`,
         } as CSSProperties
       }
     >
@@ -188,10 +188,10 @@ function DashboardLayoutContent({
                       isActive={isActive}
                       onClick={() => setLocation(item.path)}
                       tooltip={item.label}
-                      className={\h-11 transition-all font-medium \\}
+                      className="h-11 transition-all font-medium"
                     >
                       <item.icon
-                        className={\h-4 w-4 \\}
+                        className="h-4 w-4"
                       />
                       <span>{item.label}</span>
                     </SidebarMenuButton>
@@ -233,7 +233,7 @@ function DashboardLayoutContent({
           </SidebarFooter>
         </Sidebar>
         <div
-          className={\bsolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-primary/20 transition-colors \\}
+          className="absolute top-0 right-0 w-1 h-full cursor-col-resize hover:bg-primary/20 transition-colors"
           onMouseDown={() => {
             if (isCollapsed) return;
             setIsResizing(true);

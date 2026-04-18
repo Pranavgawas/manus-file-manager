@@ -1,4 +1,4 @@
-﻿import { File as FileType } from "@/types";
+import { File as FileType } from "@/types";
 import { Button } from "@/components/ui/button";
 import {
   Eye,
@@ -51,7 +51,7 @@ export default function FileGrid({ files, onPreview, onDelete }: FileGridProps) 
       setDownloadingId(null);
     },
     onError: (error) => {
-      toast.error(\Download failed: \\);
+      toast.error("Download failed");
       setDownloadingId(null);
     },
   });

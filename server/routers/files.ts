@@ -1,4 +1,4 @@
-﻿import { TRPCError } from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { createFile, deleteFile, getFileById, getUserFiles } from "../db";
 import { protectedProcedure, router } from "../_core/trpc";
@@ -38,7 +38,7 @@ export const filesRouter = router({
 
         // Upload to S3
         const { key, url } = await storagePut(
-          \/files/\-\,
+          `files/${ctx.user.id}/${input.filename}`,
           buffer,
           input.mimeType
         );
@@ -94,7 +94,7 @@ export const filesRouter = router({
         // Add display URLs to each file
         return files.map(file => ({
           ...file,
-          url: /manus-storage/\
+          url: `https://manus-storage.s3.amazonaws.com/${file.storageKey}`
         }));
       } catch (error) {
         console.error("[Files] List failed:", error);
@@ -158,7 +158,7 @@ export const filesRouter = router({
 
         return {
           ...file,
-          url: /manus-storage/\
+          url: `https://manus-storage.s3.amazonaws.com/${file.storageKey}`
         };
       } catch (error) {
         if (error instanceof TRPCError) throw error;

@@ -1,4 +1,4 @@
-﻿import { useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
@@ -55,7 +55,7 @@ export default function Files() {
       refetch();
     },
     onError: (error) => {
-      toast.error(\Upload failed: \\);
+      toast.error("Upload failed");
     },
   });
 
@@ -66,7 +66,7 @@ export default function Files() {
       refetch();
     },
     onError: (error) => {
-      toast.error(\Delete failed: \\);
+      toast.error("Delete failed");
     },
   });
 
@@ -78,7 +78,7 @@ export default function Files() {
     for (const file of fileList) {
       // Validate file size (100MB max)
       if (file.size > 100 * 1024 * 1024) {
-        toast.error(\File "\" exceeds 100MB limit\);
+        toast.error(`File "${file.name}" exceeds 100MB limit`);
         continue;
       }
 

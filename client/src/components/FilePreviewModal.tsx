@@ -1,4 +1,4 @@
-﻿import { File as FileType } from "@/types";
+import { File as FileType } from "@/types";
 import { Button } from "@/components/ui/button";
 import { X, Download, Loader2 } from "lucide-react";
 import { formatFileSize, formatDate } from "@/lib/fileUtils";
@@ -29,7 +29,7 @@ export default function FilePreviewModal({ file, onClose }: FilePreviewModalProp
       setIsDownloading(false);
     },
     onError: (error) => {
-      toast.error(\Download failed: \\);
+      toast.error("Download failed");
       setIsDownloading(false);
     },
   });
@@ -49,7 +49,7 @@ export default function FilePreviewModal({ file, onClose }: FilePreviewModalProp
               {file.filename}
             </h2>
             <p className="mt-1 text-sm text-subtle">
-              {formatFileSize(file.size)} • {formatDate(file.uploadedAt)}
+              {formatFileSize(file.size)} � {formatDate(file.uploadedAt)}
             </p>
           </div>
           <button

@@ -9,4 +9,5 @@ export interface File {
   uploadedAt: Date;
   createdAt: Date;
   updatedAt: Date;
+  url?: string;
 }
