@@ -1,4 +1,4 @@
-﻿import { useAuth } from "@/_core/hooks/useAuth";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Cloud, Shield, Zap, ArrowRight, FolderOpen, Search, Download } from "lucide-react";
 import { Link } from "wouter";
@@ -23,10 +23,13 @@ export default function Home() {
                 </Button>
               </Link>
             ) : (
-              <Button variant="default" className="font-medium shadow-sm">
-                Get Started
-              </Button>
+              <Link href="/login">
+                <Button variant="default" className="font-medium shadow-sm">
+                  Get Started
+                </Button>
+              </Link>
             )}
+
           </nav>
         </div>
       </header>
@@ -46,11 +49,12 @@ export default function Home() {
               Experience the power of secure, cloud-based file management. Upload, organize, preview, and download your files from anywhere in the world.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/files">
+              <Link href={isAuthenticated ? "/files" : "/login"}>
                 <Button size="lg" className="h-14 px-8 text-lg font-semibold gap-2 shadow-lg shadow-primary/20">
                   Access Your Storage <ArrowRight className="h-5 w-5" />
                 </Button>
               </Link>
+
               <Button variant="outline" size="lg" className="h-14 px-8 text-lg font-semibold bg-transparent">
                 View Features
               </Button>
@@ -105,11 +109,12 @@ export default function Home() {
                <p className="text-primary-foreground/90 text-lg mb-10 max-w-xl mx-auto relative z-10 leading-relaxed font-medium">
                  Join thousands of users who trust Manus for their cloud storage needs. Simple, secure, and always online.
                </p>
-               <Link href="/files">
+               <Link href={isAuthenticated ? "/files" : "/login"}>
                  <Button variant="secondary" size="lg" className="h-14 px-10 text-lg font-bold relative z-10 bg-white text-primary hover:bg-primary-foreground">
                    Start for Free <ArrowRight className="ml-2 h-5 w-5" />
                  </Button>
                </Link>
+
             </div>
           </div>
         </section>

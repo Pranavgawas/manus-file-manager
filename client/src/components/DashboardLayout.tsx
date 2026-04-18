@@ -58,29 +58,37 @@ export default function DashboardLayout({
 
   if (!user) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
-        <div className="flex flex-col items-center gap-8 p-8 max-w-md w-full">
-          <div className="flex flex-col items-center gap-6">
-            <h1 className="text-2xl font-semibold tracking-tight text-center">
-              Sign in to continue
+      <div className="flex items-center justify-center min-h-screen bg-background relative overflow-hidden">
+        {/* Decorative Background */}
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-400/5 rounded-full blur-[120px] animate-pulse" />
+
+        <div className="flex flex-col items-center gap-8 p-12 glass-card max-w-md w-full animate-scale-in text-center">
+          <div className="p-4 bg-primary/10 rounded-2xl">
+            <LogOut className="h-10 w-10 text-primary rotate-180" />
+          </div>
+          <div className="flex flex-col gap-3">
+            <h1 className="text-3xl font-extrabold tracking-tight">
+              Session Expired
             </h1>
-            <p className="text-sm text-muted-foreground text-center max-w-sm">
-              Access to this dashboard requires authentication. Continue to launch the login flow.
+            <p className="text-sm text-subtle leading-relaxed">
+              Your session has ended or requires authentication. Please sign in to access your secure dashboard.
             </p>
           </div>
           <Button
             onClick={() => {
-              window.location.href = getLoginUrl();
+              window.location.href = "/login";
             }}
             size="lg"
-            className="w-full shadow-lg hover:shadow-xl transition-all"
+            className="w-full h-14 text-lg font-bold shadow-xl shadow-primary/20 hover:shadow-primary/30 transition-all hover:-translate-y-0.5"
           >
-            Sign in
+            Sign in to Continue
           </Button>
         </div>
       </div>
     );
   }
+
 
   return (
     <SidebarProvider

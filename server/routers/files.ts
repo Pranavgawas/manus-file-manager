@@ -91,10 +91,10 @@ export const filesRouter = router({
           search: input.search,
         });
 
-        // Add display URLs to each file
+        // Add display URLs to each file — proxy via /manus-storage/ (served by storageProxy)
         return files.map(file => ({
           ...file,
-          url: `https://manus-storage.s3.amazonaws.com/${file.storageKey}`
+          url: `/manus-storage/${file.storageKey}`
         }));
       } catch (error) {
         console.error("[Files] List failed:", error);
@@ -158,7 +158,7 @@ export const filesRouter = router({
 
         return {
           ...file,
-          url: `https://manus-storage.s3.amazonaws.com/${file.storageKey}`
+          url: `/manus-storage/${file.storageKey}`
         };
       } catch (error) {
         if (error instanceof TRPCError) throw error;

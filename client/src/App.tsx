@@ -1,4 +1,4 @@
-﻿import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
 import { Route, Switch, Redirect } from "wouter";
@@ -6,7 +6,9 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Files from "./pages/Files";
+import Login from "./pages/Login";
 import DashboardLayout from "./components/DashboardLayout";
+
 
 function Router() {
   return (
@@ -14,6 +16,11 @@ function Router() {
       <Route path="/">
         <Home />
       </Route>
+
+      <Route path="/login">
+        <Login />
+      </Route>
+
       
       <Route path="/files">
         <DashboardLayout>

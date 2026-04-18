@@ -20,7 +20,11 @@ import {
   FilePlus,
   ArrowUpDown,
   FileQuestion,
+  LayoutGrid,
+  LayoutList,
+  GalleryVertical,
 } from "lucide-react";
+
 import { toast } from "sonner";
 import FileUploadZone from "@/components/FileUploadZone";
 import FileGrid from "@/components/FileGrid";
@@ -41,7 +45,9 @@ export default function Files() {
   const [searchQuery, setSearchQuery] = useState("");
   const [previewFile, setPreviewFile] = useState<any>(null);
   const [deleteFile, setDeleteFile] = useState<any>(null);
+  const [viewMode, setViewMode] = useState<"grid" | "gallery">("grid");
   const fileInputRef = useRef<HTMLInputElement>(null);
+
 
   // Queries
   const { data: files = [], isLoading, refetch } = trpc.files.list.useQuery({
@@ -209,8 +215,32 @@ export default function Files() {
                   <SelectItem value="other">Other</SelectItem>
                 </SelectContent>
               </Select>
+
+
+              {/* View Mode Toggle */}
+              <div className="flex items-center bg-card border border-border/60 rounded-lg p-1">
+                <Button 
+                  variant={viewMode === "grid" ? "secondary" : "ghost"} 
+                  size="sm" 
+                  className="h-8 w-8 p-0"
+                  onClick={() => setViewMode("grid")}
+                  title="Grid View"
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant={viewMode === "gallery" ? "secondary" : "ghost"} 
+                  size="sm" 
+                  className="h-8 w-8 p-0"
+                  onClick={() => setViewMode("gallery")}
+                  title="Gallery View"
+                >
+                  <GalleryVertical className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
           </div>
+
 
           {/* File Grid */}
           {isLoading ? (
@@ -243,8 +273,10 @@ export default function Files() {
               files={files}
               onPreview={setPreviewFile}
               onDelete={setDeleteFile}
+              viewMode={viewMode}
             />
           )}
+
         </section>
 
         {/* Stats Summary */}
@@ -315,8 +347,19 @@ export default function Files() {
         <FilePreviewModal
           file={previewFile}
           onClose={() => setPreviewFile(null)}
+          onNext={() => {
+            const idx = files.findIndex(f => f.id === previewFile.id);
+            if (idx < files.length - 1) setPreviewFile(files[idx + 1]);
+          }}
+          onPrev={() => {
+            const idx = files.findIndex(f => f.id === previewFile.id);
+            if (idx > 0) setPreviewFile(files[idx - 1]);
+          }}
+          hasNext={files.findIndex(f => f.id === previewFile.id) < files.length - 1}
+          hasPrev={files.findIndex(f => f.id === previewFile.id) > 0}
         />
       )}
+
 
       {deleteFile && (
         <FileDeleteDialog
